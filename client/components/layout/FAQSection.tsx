@@ -1,23 +1,29 @@
 'use client';
 
-import { useState, ReactNode } from 'react';
+import { useId, useState, ReactNode } from 'react';
+
 import { ChevronDown } from 'lucide-react';
 import { SectionHeader, sectionClass } from '@/components/landing/SectionHeader';
 
 const FAQItem = ({ question, answer }: { question: string; answer: ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const answerId = useId();
+
     return (
         <div className="border-b border-white/[0.06]">
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                aria-expanded={isOpen}
-                className="flex w-full items-center justify-between gap-4 py-5 text-left text-[15px] font-medium text-zinc-100 transition hover:text-white focus-visible:outline-2 focus-visible:outline-ice"
-            >
-                {question}
-                <ChevronDown
-                    className={`h-4 w-4 shrink-0 text-zinc-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                />
-            </button>
+            <h3>
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-expanded={isOpen}
+                    aria-controls={answerId}
+                    className="flex w-full items-center justify-between gap-4 py-5 text-left text-[15px] font-medium text-zinc-100 transition hover:text-white focus-visible:outline-2 focus-visible:outline-ice"
+                >
+                    {question}
+                    <ChevronDown
+                        className={`h-4 w-4 shrink-0 text-zinc-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                    />
+                </button>
+            </h3>
             {/* 0fr -> 1fr grid rows track the answer's true height at every viewport width,
                 unlike a fixed max-h cap that silently clips long answers on narrow screens */}
             <div className={`grid transition-[grid-template-rows] duration-300 ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
@@ -26,7 +32,7 @@ const FAQItem = ({ question, answer }: { question: string; answer: ReactNode }) 
                     on a link inside a collapsed answer and screen readers read every
                     answer aloud while aria-expanded says false. visibility:hidden removes
                     it from both and still animates. */}
-                <div className={`overflow-hidden ${isOpen ? '' : 'invisible'}`}>
+                <div id={answerId} className={`overflow-hidden ${isOpen ? '' : 'invisible'}`}>
                     <div className="pb-5 text-sm leading-relaxed text-zinc-400">{answer}</div>
                 </div>
             </div>
